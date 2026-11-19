@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#06120d">
+    <title>Golaço 10</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Saira+Semi+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Folha de Estilos -->
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+  <body>
+    <div id="stage" class="stage">
+      <canvas id="game" aria-label="Campo de futebol"></canvas>
+      <header id="hud" class="hud" hidden>
+        <div class="points" id="pointsBox">
+          <span>Pontos</span>
+          <b id="pointsVal">0</b>
+        </div>
+        <div class="board" aria-live="polite">
+          <div class="board-main">
+            <div class="board-team home">
+              <span id="homeName">CRA</span>
+              <i class="swatch" id="homeSwatch"></i>
+            </div>
+            <div class="board-score">
+              <b id="homeScore">0</b>
+              <span class="colon">:</span>
+              <b id="awayScore">0</b>
+            </div>
+            <div class="board-team away">
+              <i class="swatch" id="awaySwatch"></i>
+              <span id="awayName">TAR</span>
+            </div>
+          </div>
+          <div class="board-clock" id="clock">1:30</div>
+          <div class="board-sub" id="boardSub">Fase 1</div>
+        </div>
+        <div></div>
+      </header>
+      <div class="toolbar">
+        <button class="icon-btn" id="pauseBtn" type="button" aria-label="Pausar" hidden>
+          <svg viewBox="0 0 24 24">
+            <path d="M8 5v14M16 5v14"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="soundBtn" type="button" aria-label="Ligar ou desligar o som">
+          <svg class="on" viewBox="0 0 24 24">
+            <path d="M4 9v6h4l5 4V5L8 9H4z"/>
+            <path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>
+          </svg>
+          <svg class="off" viewBox="0 0 24 24">
+            <path d="M4 9v6h4l5 4V5L8 9H4z"/>
+            <path d="M17 9l5 6M22 9l-5 6"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="fsBtn" type="button" aria-label="Tela cheia">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+          </svg>
+        </button>
+      </div>
+      <div id="banner" class="banner" hidden>
+        <div class="banner-title" id="bannerTitle">GOOOL!</div>
+        <div class="banner-sub" id="bannerSub"></div>
+      </div>
+      <div id="toast" class="toast" hidden></div>
+      <div id="touch" class="touch one" hidden>
+        <div class="zone" data-slot="0">
+          <div class="stick" id="stick0">
+            <div class="knob"></div>
+          </div>
+        </div>
+        <div class="zone" data-slot="1">
+          <div class="stick" id="stick1">
+            <div class="knob"></div>
+          </div>
+        </div>
+        <button class="tbtn shoot" id="shoot0" type="button" data-slot="0" data-act="shoot" aria-label="Chutar, jogador 1">
+          <span>Chute</span>
+        </button>
+        <button class="tbtn dash" id="dash0" type="button" data-slot="0" data-act="dash" aria-label="Drible ou carrinho, jogador 1">
+          <span>Drible</span>
+        </button>
+        <button class="tbtn shoot" id="shoot1" type="button" data-slot="1" data-act="shoot" aria-label="Chutar, jogador 2">
+          <span>Chute</span>
+        </button>
+        <button class="tbtn dash" id="dash1" type="button" data-slot="1" data-act="dash" aria-label="Drible ou carrinho, jogador 2">
+          <span>Drible</span>
+        </button>
+      </div>
+
+      <!-- MENU -->
+      <section id="menu" class="overlay menu">
+        <div class="menu-inner">
+          <div class="brand">
+            <div class="kicker">Futebol arcade · 1 ou 2 jogadores</div>
+            <h1 class="logo" aria-label="Golaço 10">
+              <span class="logo-word">Golaço</span>
+              <span class="logo-num">10</span>
+            </h1>
+            <p class="brand-line">Pegue a camisa 10 da amarelinha, carregue o chute e balance a rede em seis fases, da várzea até a final do Mundial. Dá para jogar sozinho, em dupla no mesmo time ou um contra o outro.</p>
+            <div class="records" id="records"></div>
+          </div>
+          <form class="panel" id="menuForm" autocomplete="off">
+            <div class="field-label" id="modeLabel">Modo de jogo</div>
+            <div class="modes" role="radiogroup" aria-labelledby="modeLabel">
+              <label class="mode">
+                <input type="radio" name="mode" id="modeSolo" value="solo" checked>
+                <span class="mode-card">
+                  <svg viewBox="0 0 48 34" aria-hidden="true">
+                    <path d="M17 4l7 3 7-3 9 6-4 6-4-2v16H16V14l-4 2-4-6z" fill="#ffd23f" stroke="#0f8a4a" stroke-width="2" stroke-linejoin="round"/>
+                    <text x="24" y="25" text-anchor="middle" font-size="9" font-weight="900" fill="#0f8a4a" font-family="Impact,sans-serif">10</text>
+                  </svg>
+                  <span>
+                    <b>Solo</b>
+                    <small>Campanha de seis fases contra a máquina</small>
+                  </span>
+                </span>
+              </label>
+              <label class="mode">
+                <input type="radio" name="mode" id="modeCoop" value="coop">
+                <span class="mode-card">
+                  <svg viewBox="0 0 48 34" aria-hidden="true">
+                    <path d="M9 6l5 2 5-2 6 4-3 4-3-1v12H9V13l-3 1-3-4z" fill="#ffd23f" stroke="#0f8a4a" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M29 6l5 2 5-2 6 4-3 4-3-1v12H29V13l-3 1-3-4z" fill="#ffd23f" stroke="#0f8a4a" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                  <span>
+                    <b>Dupla</b>
+                    <small>Dois jogadores no mesmo time, com passe</small>
+                  </span>
+                </span>
+              </label>
+              <label class="mode">
+                <input type="radio" name="mode" id="modeVs" value="versus">
+                <span class="mode-card">
+                  <svg viewBox="0 0 48 34" aria-hidden="true">
+                    <path d="M9 6l5 2 5-2 6 4-3 4-3-1v12H9V13l-3 1-3-4z" fill="#ffd23f" stroke="#0f8a4a" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M29 6l5 2 5-2 6 4-3 4-3-1v12H29V13l-3 1-3-4z" fill="#2a5bd7" stroke="#f4f1e8" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                  <span>
+                    <b>Clássico</b>
+                    <small>Jogador 1 contra Jogador 2, primeiro a 5</small>
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div class="names solo" id="names">
+              <div class="name-field name-p1" style="--c:var(--p1)">
+                <label for="name1">
+                  <i></i>
+                  Jogador 1
+                </label>
+                <input id="name1" maxlength="12" spellcheck="false">
+              </div>
+              <div class="name-field name-p2" style="--c:var(--p2)">
+                <label for="name2">
+                  <i></i>
+                  Jogador 2
+                </label>
+                <input id="name2" maxlength="12" spellcheck="false">
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" id="playBtn" type="submit" data-primary>Bola rolando</button>
+              <button class="btn btn-ghost" id="helpBtn" type="button">Como jogar</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- COMO JOGAR -->
+      <section id="help" class="overlay" hidden>
+        <div class="card help-card">
+          <div class="eyebrow">Manual do craque</div>
+          <h2 class="card-title">Como jogar</h2>
+          <div class="help-grid">
+            <div>
+              <table class="keys">
+                <thead>
+                  <tr>
+                    <th>Teclado</th>
+                    <th class="p1">Jogador 1</th>
+                    <th class="p2">Jogador 2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Correr</td>
+                    <td>
+                      <kbd>W</kbd>
+                      <kbd>A</kbd>
+                      <kbd>S</kbd>
+                      <kbd>D</kbd>
+                    </td>
+                    <td>
+                      <kbd>↑</kbd>
+                      <kbd>←</kbd>
+                      <kbd>↓</kbd>
+                      <kbd>→</kbd>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Chutar (segure)</td>
+                    <td>
+                      <kbd>F</kbd>
+                      ou
+                      <kbd>Espaço</kbd>
+                    </td>
+                    <td>
+                      <kbd>K</kbd>
+                      ou
+                      <kbd>Enter</kbd>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Drible / carrinho</td>
+                    <td>
+                      <kbd>G</kbd>
+                      ou
+                      <kbd>Shift</kbd>
+                      esq.
+                    </td>
+                    <td>
+                      <kbd>L</kbd>
+                      ou
+                      <kbd>Shift</kbd>
+                      dir.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Pausa</td>
+                    <td colspan="2">
+                      <kbd>Esc</kbd>
+                      ou
+                      <kbd>P</kbd>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="help-sub">Celular e tablet</div>
+              <ul class="tips" style="margin-top:8px">
+                <li>
+                  Arraste o polegar no lado esquerdo para correr e use
+                  <b>Chute</b>
+                  e
+                  <b>Drible</b>
+                  à direita.
+                </li>
+                <li>Em 2 jogadores, cada um fica com uma ponta da tela: joystick na borda, botões para dentro.</li>
+                <li>
+                  Controle de videogame: analógico corre,
+                  <b>A</b>
+                  chuta,
+                  <b>B</b>
+                  dribla,
+                  <b>Start</b>
+                  pausa.
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div class="help-sub" style="margin-top:0">Jogadas</div>
+              <ul class="tips" style="margin-top:8px">
+                <li>
+                  <b>Segure o chute</b>
+                  para carregar a força. Bomba de longe vale bônus de golaço.
+                </li>
+                <li>
+                  <b>Drible com a bola</b>
+                  dá uma arrancada que passa pelo marcador. Sem a bola, vira
+                  <b>carrinho</b>
+                  para roubar.
+                </li>
+                <li>
+                  Na
+                  <b>dupla</b>
+                  , um toque rápido de chute apontado para o parceiro vira passe.
+                </li>
+                <li>
+                  Vence quem chegar primeiro aos gols da fase. Se o tempo acabar empatado, vale
+                  <b>gol de ouro</b>
+                  .
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" id="helpBack" type="button" data-primary>Entendi</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- APRESENTAÇÃO DA FASE -->
+      <section id="intro" class="overlay" hidden>
+        <div class="card">
+          <div class="eyebrow" id="introEyebrow">Fase 1 de 6</div>
+          <h2 class="card-title" id="introTitle">Amistoso</h2>
+          <div class="matchup">
+            <span class="chip" id="introHome"></span>
+            <span class="vs">x</span>
+            <span class="chip" id="introAway"></span>
+          </div>
+          <dl class="facts">
+            <div>
+              <dt>Para vencer</dt>
+              <dd id="introGoal"></dd>
+            </div>
+            <div>
+              <dt>Tempo</dt>
+              <dd id="introTime"></dd>
+            </div>
+            <div>
+              <dt>Adversários</dt>
+              <dd id="introOpp"></dd>
+            </div>
+            <div>
+              <dt>Dificuldade</dt>
+              <dd class="diff" id="introDiff"></dd>
+            </div>
+          </dl>
+          <div class="actions">
+            <button class="btn btn-primary" id="introGo" type="button" data-primary>Bola rolando</button>
+            <button class="btn btn-ghost" id="introMenu" type="button">Menu</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAUSA -->
+      <section id="pause" class="overlay" hidden>
+        <div class="card" style="width:min(380px,100%)">
+          <div class="eyebrow">Jogo parado</div>
+          <h2 class="card-title">Pausa</h2>
+          <div class="actions vertical">
+            <button class="btn btn-primary" id="resumeBtn" type="button" data-primary>Continuar</button>
+            <button class="btn btn-ghost" id="restartBtn" type="button">Reiniciar partida</button>
+            <button class="btn btn-ghost" id="pauseHelpBtn" type="button">Como jogar</button>
+            <button class="btn btn-ghost" id="quitBtn" type="button">Voltar ao menu</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTADO -->
+      <section id="result" class="overlay" hidden>
+        <div class="card">
+          <div class="eyebrow" id="resEyebrow"></div>
+          <h2 class="card-title" id="resTitle"></h2>
+          <p class="res-score" id="resScore"></p>
+          <div id="resExtra"></div>
+          <div class="actions" id="resActions"></div>
+        </div>
+      </section>
+
+      <!-- GIRE O APARELHO -->
+      <section id="rotate" class="overlay" hidden>
+        <div class="card rotate-card">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="20" y="8" width="24" height="44" rx="4"/>
+            <path d="M29 46h6"/>
+          </svg>
+          <h2 class="card-title" style="font-size:32px">Gire o aparelho</h2>
+          <p>O campo fica bem maior com a tela deitada.</p>
+          <div class="actions">
+            <button class="btn btn-ghost" id="rotateOk" type="button" data-primary>Jogar assim mesmo</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Script Principal do Jogo -->
+    <script src="../js/game.js"></script>
+  </body>
+</html>
