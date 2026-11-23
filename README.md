@@ -13,7 +13,7 @@ Em vez de apenas gerar código de forma automática, o desenvolvimento seguiu um
 
 ## 🚀 Tecnologias Utilizadas
 
-* *[Adicione aqui as linguagens/tecnologias do seu projeto, ex: HTML5, CSS3, JavaScript / Python / React, etc.]*
+* *JavaScript, HTML and CSS*
 
 ## 🎮 Como Executar o Projeto
 
