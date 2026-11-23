@@ -1,0 +1,8 @@
+.git
+.gitignore
+.vscode
+README.md
+HANDOFF-golaco10.md
+*.log
+.DS_Store
+Thumbs.db
